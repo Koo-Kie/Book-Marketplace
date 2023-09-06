@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Project Title</title>
+    <!-- Add your CSS links and other head content here -->
+</head>
+<body>
+    <header>
+        <!-- Add your header content here -->
+    </header>
+
+    <nav>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        <a href="/logout">Logout</a>
+
+    </nav>
+
+    <main>
+        {% block content %}
+        <!-- Content from child templates will be placed here -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <!-- Add your footer content here -->
+    </footer>
+
+    <!-- Add your JavaScript scripts and other footer content here -->
+</body>
+</html>
