@@ -11,12 +11,29 @@
         <!-- Add your header content here -->
     </header>
 
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>Message:</strong> {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+    </div>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+    <h4>You're successfully logged in.</h4>
     <nav>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
         <a href="/logout">Logout</a>
 
     </nav>
+    {% else %}
+    <nav>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+
+    </nav>
+    {% endif %}
+
 
     <main>
         {% block content %}
