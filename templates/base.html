@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Project Title</title>
+    <title>{% block title %}Bookaz{% endblock title %}</title>
     <!-- Add your CSS links and other head content here -->
 </head>
 <body>
@@ -20,19 +20,58 @@
     </div>
     {% endfor %}
 
-    {% if user.is_authenticated %}
-    <h4>You're successfully logged in.</h4>
-    <nav>
-        <a href="/logout">Logout</a>
-
+    <nav class="top-navbar">
+        <div class="top-navbar-left">
+            <!-- Social Media Buttons (Add your icons or links here) -->
+            <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
+            <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
+            <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
+        </div>
+        <div class="top-navbar-right">
+            <!-- Check if the user is authenticated -->
+            {% if user.is_authenticated %}
+                <a>{{user.first_name}} {{user.last_name}}</a>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/register">Sign-up</a>
+                <a href="/login">Login</a>
+            {% endif %}
+        </div>
     </nav>
-    {% else %}
-    <nav>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
 
+    <!-- Larger Navigation Bar (for classified ads website) -->
+    <nav class="classified-ads-navbar">
+        <!-- Left Section -->
+        <div class="classified-ads-navbar-left">
+            <!-- Add left section buttons here -->
+            <ul>
+                <li><a href="#">Logo</a></li>
+                <!-- Add more buttons as needed on the left side -->
+            </ul>
+        </div>
+
+        <!-- Center Section (Main Navigation Buttons) -->
+        <div class="classified-ads-navbar-center">
+            <!-- Add your classified ads website navigation buttons here -->
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#docs">Docs</a></li>
+                <!-- Add more main navigation buttons as needed in the center -->
+            </ul>
+        </div>
+
+        <!-- Right Section -->
+        <div class="classified-ads-navbar-right">
+            <!-- Add right section buttons here -->
+            <ul>
+                <li><a href="#" class="highlighted">Créer une annonce</a></li>
+                <!-- Add more buttons as needed on the right side -->
+            </ul>
+        </div>
     </nav>
-    {% endif %}
+    
 
 
     <main>
@@ -42,9 +81,91 @@
     </main>
 
     <footer>
-        <!-- Add your footer content here -->
+        <a>Bookaz Copyright @ 2024</a>
     </footer>
 
-    <!-- Add your JavaScript scripts and other footer content here -->
+
 </body>
+
+<style>
+    body {
+        margin: 0;
+    }
+
+    /* Top Navigation Bar Styles */
+    .top-navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #232323;
+        color: #cdcdcd;
+        padding: 10px 20px;
+    }
+
+    .top-navbar-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .top-navbar-left a {
+        margin-right: 10px;
+    }
+
+    .top-navbar-right a {
+        color: #fff;
+        text-decoration: none;
+        margin-left: 10px;
+    }
+
+    /* Classified Ads Navigation Bar Styles */
+    .classified-ads-navbar {
+        background: #232323;
+        color: #cdcdcd;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .classified-ads-navbar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .classified-ads-navbar li {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .classified-ads-navbar a {
+        color: #cdcdcd;
+        text-decoration: none;
+    }
+
+    /* Left Section Styles */
+    .classified-ads-navbar-left {
+        flex-grow: 1; /* Take available space */
+    }
+
+    /* Center Section Styles */
+    .classified-ads-navbar-center {
+        flex-grow: 2; /* Take more space than left and right sections */
+        text-align: center;
+    }
+
+    /* Right Section Styles */
+    .classified-ads-navbar-right {
+        flex-grow: 1; /* Take available space */
+        text-align: right;
+    }
+
+    /* Highlighted buttons */
+    .highlighted{
+        background-color: purple;
+        border-radius: 5px;
+        padding: 3%;
+    }
+</style>
+
 </html>
