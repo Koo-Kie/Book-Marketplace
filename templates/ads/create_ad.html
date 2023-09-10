@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Ad</title>
-</head>
-<body>
-    <h1>Create Ad</h1>
+{% extends '../base.html' %}
+
+{% block title %}Créer une annonce{% endblock title %}
+
+{% block content %}
+
+    <h1>Créer une annonce</h1>
     
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -40,7 +38,7 @@
 
         <!-- Bundle List Creator (Initially hidden) -->
         <div id="bundleFields" style="display: none;">
-            <h2>Bundle Items</h2>
+            <h2>Articles dans le pack:</h2>
             <ul id="itemList">
                 <!-- List items will be dynamically added here -->
             </ul>
@@ -98,5 +96,5 @@
             adForm.submit();
         });
     </script>
-</body>
-</html>
+
+{% endblock content %}

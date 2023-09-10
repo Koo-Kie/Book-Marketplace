@@ -2,15 +2,38 @@ from django.shortcuts import render, redirect
 from .models import *
 from django.contrib.auth.decorators import login_required
 import ast
+from authentication.gmail import sendingMessage
+from django.template.loader import render_to_string
+
 
 def home(request):
     ads = ClassifiedAd.objects.all()
     return render(request, 'home.html', {"ads": ads})
 
+def support(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('name')
+        message = request.POST.get('message')
+
+        message = render_to_string('auth/email_confirmation.html',{
+                'name': name,
+                'email':email,
+                'message':message
+            })
+        sendingMessage(email,"Demande de support", message)
+        sendingMessage('kaisgrati5@gmail.com',"Demande de support", message)
+
+    if request.user.is_authenticated:
+        user = request.user
+        return render(request, 'support/support.html', {'user': user})
+    else:
+        return render(request, 'support/support.html')
+
 @login_required
 def create_ad(request):
     if request.method == 'POST':
-        print(request.POST)
+
         ad_type = request.POST.get('ad_type')
         title = request.POST.get('title')
         description = request.POST.get('description')
@@ -18,7 +41,6 @@ def create_ad(request):
         image = request.FILES.get('image')
         bundle_items = request.POST.get('bundle_items')
 
-        print(request.POST)
 
         if ad_type == 'single':
             ad = ClassifiedAd.objects.create(

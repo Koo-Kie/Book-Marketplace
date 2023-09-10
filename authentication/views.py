@@ -21,9 +21,7 @@ def login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                name = user.first_name
-                surname = user.last_name
-                return render(request, 'home.html', {'name': name, 'surname': surname})
+                return redirect('/')
             else:
                 form.add_error(None, 'Invalid email or password. Please try again.')
     else:
@@ -86,6 +84,7 @@ def register_view(request):
             })
             
             sendingMessage(user.username, email_subject, message)
+            
         
             
             return redirect('login')  # Redirect to the login page or another appropriate page
@@ -98,7 +97,7 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")
-    return render(request, "home.html")
+    return redirect('/')
 
 def activate(request,uidb64,token):
     try:

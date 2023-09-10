@@ -1,9 +1,10 @@
 {% autoescape off %}
 
- Welcome to Bookaz - Django Login!!
- Hello {{ name }}!!
- Please confirm your email by clicking on the following link.
+ Bonjour {{name}},
+ Nous avons reçu votre demande de contact du support, nous reviendrons vers vous le plus tôt possible.
 
- Confirmation Link: http://{{ domain }}{% url 'activate' uidb64=uid token=token %} 
+ Email: {{email}}
+ Message: {{message}}
+ 
 
  {% endautoescape %}
