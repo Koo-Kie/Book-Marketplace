@@ -3,5 +3,7 @@
 {% block title %}Bookaz - Home{% endblock title %}
 
 {% block content %}
-  <h1>Welcome to my website {{name}} {{surname}}</h1>
+  {% for ad in ads %}
+    {{ad.title}} - {{ad.price}} <img src="{{ad.image.url}}">
+  {% endfor %}
 {% endblock %}

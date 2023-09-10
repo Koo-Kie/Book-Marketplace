@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ad</title>
+</head>
+<body>
+    <h1>Create Ad</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Choose between bundle or single item -->
+        <div>
+            <label>Type:</label>
+            <input type="radio" name="ad_type" value="single" id="singleItem" checked>
+            <label for="singleItem">Single Item</label>
+            <input type="radio" name="ad_type" value="bundle" id="bundle">
+            <label for="bundle">Bundle</label>
+        </div>
+
+        <!-- Ad Info Fields -->
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" required>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" required></textarea>
+        </div>
+        <div>
+            <label for="price">Price:</label>
+            <input type="number" name="price" id="price" required>
+        </div>
+        <div>
+            <label for="id_image">Image:</label>
+            <input type="file" name="image" id="id_image" required>
+        </div>
+
+        <!-- Bundle List Creator (Initially hidden) -->
+        <div id="bundleFields" style="display: none;">
+            <h2>Bundle Items</h2>
+            <ul id="itemList">
+                <!-- List items will be dynamically added here -->
+            </ul>
+            <div>
+                <label for="itemName">Item Name:</label>
+                <input type="text" name="itemName" id="itemName">
+                <button type="button" id="addItem">Add Item</button>
+            </div>
+        </div>
+
+        <button type="submit">Create Ad</button>
+    </form>
+
+    <script>
+        // Toggle bundle fields based on the selected type
+        const adTypeRadio = document.querySelectorAll('input[name="ad_type"]');
+        const bundleFields = document.getElementById('bundleFields');
+        const itemList = document.getElementById('itemList');
+        const itemNameInput = document.getElementById('itemName');
+        const addItemButton = document.getElementById('addItem');
+
+        adTypeRadio.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.value === 'bundle') {
+                    bundleFields.style.display = 'block';
+                } else {
+                    bundleFields.style.display = 'none';
+                }
+            });
+        });
+
+        // Dynamically add bundle items to the list
+        addItemButton.addEventListener('click', () => {
+            const itemName = itemNameInput.value.trim();
+            if (itemName) {
+                const listItem = document.createElement('li');
+                listItem.textContent = itemName;
+                itemList.appendChild(listItem);
+                itemNameInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

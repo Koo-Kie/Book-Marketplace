@@ -11,9 +11,6 @@ from django.utils.encoding import force_bytes, force_str
 from . tokens import generate_token
 
 
-def home(request):
-    return render(request, "home.html")
-
 
 def login_view(request):
     if request.method == 'POST':
