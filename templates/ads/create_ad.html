@@ -15,9 +15,9 @@
         <div>
             <label>Type:</label>
             <input type="radio" name="ad_type" value="single" id="singleItem" checked>
-            <label for="singleItem">Single Item</label>
+            <label for="singleItem">Un seul article</label>
             <input type="radio" name="ad_type" value="bundle" id="bundle">
-            <label for="bundle">Bundle</label>
+            <label for="bundle">Pack</label>
         </div>
 
         <!-- Ad Info Fields -->
@@ -49,6 +49,7 @@
                 <input type="text" name="itemName" id="itemName">
                 <button type="button" id="addItem">Add Item</button>
             </div>
+            <input type="hidden" name="bundle_items" id="bundleItemsField">
         </div>
 
         <button type="submit">Create Ad</button>
@@ -81,6 +82,20 @@
                 itemList.appendChild(listItem);
                 itemNameInput.value = '';
             }
+        });
+
+        const adForm = document.querySelector('form');
+        adForm.addEventListener('submit', (event) => {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Serialize the bundle items as a JSON array
+            const bundleItems = Array.from(itemList.children).map(item => item.textContent);
+            const bundleItemsField = document.getElementById('bundleItemsField');
+            bundleItemsField.value = JSON.stringify(bundleItems);
+
+            // Submit the form
+            adForm.submit();
         });
     </script>
 </body>

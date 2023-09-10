@@ -3,7 +3,56 @@
 {% block title %}Bookaz - Home{% endblock title %}
 
 {% block content %}
-  {% for ad in ads %}
-    {{ad.title}} - {{ad.price}} <img src="{{ad.image.url}}">
-  {% endfor %}
+  <div class="ad-container">
+    {% for ad in ads %}
+      <a href="/ad?ad_id={{ ad.ad_id }}" class="ad-link">
+        <div class="ad-item">
+          <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+          <h3>{{ ad.title }}</h3>
+          <p class="ad-price">${{ ad.price }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+  <style>
+    .ad-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      max-width: 1080px; /* Adjust as needed */
+      margin: 0 auto;
+    }
+  
+    .ad-link {
+      text-decoration: none; /* Remove underline from links */
+      color: inherit; /* Inherit the text color */
+      width: calc(25% - 20px); /* 4 ads per row with 20px spacing between them */
+      margin-bottom: 20px;
+    }
+  
+    .ad-item {
+      background-color: #f2f2f2; /* Background color for the ad container */
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow */
+    }
+  
+    .ad-item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+  
+    .ad-item h3 {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  
+    .ad-price {
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
 {% endblock %}
