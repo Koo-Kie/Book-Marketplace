@@ -5,10 +5,10 @@
 {% block content %}
 
     <h1>Créer une annonce</h1>
-    
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <!-- Choose between bundle or single item -->
         <div>
             <label>Type:</label>
@@ -20,7 +20,7 @@
 
         <!-- Ad Info Fields -->
         <div>
-            <label for="title">Title:</label>
+            <label for="title">Titre de l'annonce:</label>
             <input type="text" name="title" id="title" required>
         </div>
         <div>
@@ -28,7 +28,7 @@
             <textarea name="description" id="description" required></textarea>
         </div>
         <div>
-            <label for="price">Price:</label>
+            <label for="price">Prix:</label>
             <input type="number" name="price" id="price" required>
         </div>
         <div>
@@ -37,8 +37,8 @@
         </div>
 
         <!-- Bundle List Creator (Initially hidden) -->
-        <div id="bundleFields" style="display: none;">
-            <h2>Articles dans le pack:</h2>
+        <div id="bundleFields">
+            <h2>Article(s) dans l'annonce:</h2>
             <ul id="itemList">
                 <!-- List items will be dynamically added here -->
             </ul>
@@ -50,8 +50,18 @@
             <input type="hidden" name="bundle_items" id="bundleItemsField">
         </div>
 
-        <button type="submit">Create Ad</button>
+        <button type="submit">Créer</button>
+
     </form>
+
+    <div class="ad-preview">
+        <h2>Preview:</h2>
+        <div class="ad-item">
+            <img src="" alt="" id="previewImage" style="width: 300px; height: auto; border-radius: 4px;">
+            <h3 id="previewTitle" style="font-size: 16px; margin-top: 10px;"></h3>
+            <p class="ad-price" id="previewPrice" style="font-size: 14px; color: #333;"></p>
+        </div>
+    </div>
 
     <script>
         // Toggle bundle fields based on the selected type
@@ -61,15 +71,15 @@
         const itemNameInput = document.getElementById('itemName');
         const addItemButton = document.getElementById('addItem');
 
-        adTypeRadio.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'bundle') {
-                    bundleFields.style.display = 'block';
-                } else {
-                    bundleFields.style.display = 'none';
-                }
-            });
-        });
+        // adTypeRadio.forEach(radio => {
+        //     radio.addEventListener('change', () => {
+        //         if (radio.value === 'bundle') {
+        //             bundleFields.style.display = 'block';
+        //         } else {
+        //             bundleFields.style.display = 'none';
+        //         }
+        //     });
+        // });
 
         // Dynamically add bundle items to the list
         addItemButton.addEventListener('click', () => {
@@ -95,6 +105,137 @@
             // Submit the form
             adForm.submit();
         });
+
+        // Update the ad preview when form inputs change
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        const priceInput = document.getElementById('price');
+        const imageInput = document.getElementById('id_image');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewPrice = document.getElementById('previewPrice');
+        const previewImage = document.getElementById('previewImage');
+
+        titleInput.addEventListener('input', updatePreview);
+        descriptionInput.addEventListener('input', updatePreview);
+        priceInput.addEventListener('input', updatePreview);
+        imageInput.addEventListener('change', updatePreview);
+
+        function updatePreview() {
+            const title = titleInput.value.trim();
+            const description = descriptionInput.value.trim();
+            const price = priceInput.value.trim();
+            const image = imageInput.files[0];
+
+            // Update the preview content
+            previewTitle.textContent = title;
+            previewPrice.textContent = `TND ${price}`;
+            
+            // Display a placeholder image if no image is selected
+            if (image) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(image);
+            } else {
+                // Display a placeholder image or hide it based on your preference
+                previewImage.src = ''; // Set to an empty string or a placeholder image URL
+            }
+        }
+
+
     </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        button[type="submit"],
+        #addItem {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover,
+        #addItem:hover {
+            background-color: #0056b3;
+        }
+
+        #bundleFields {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #bundleFields h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .ad-preview {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .ad-preview h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+</style>
 
 {% endblock content %}

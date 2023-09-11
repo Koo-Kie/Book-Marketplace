@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path("support/", views.support),
     path("create_ad/", views.create_ad),
+    path("myads/", views.myads),
     path("ad/", views.ad_view)
 ]
 if settings.DEBUG:

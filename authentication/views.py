@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from ads_system.models import CustomUser
 from .forms import *
 from django.contrib import messages
 from .gmail import sendingMessage
@@ -41,11 +41,11 @@ def register_view(request):
             first_name=form.cleaned_data['first_name']
             last_name=form.cleaned_data['last_name']
 
-            if User.objects.filter(username=username):
+            if CustomUser.objects.filter(username=username):
                 messages.error(request, "Username already exist! Please try some other username.")
                 return redirect('register')
         
-            if User.objects.filter(email=email).exists():
+            if CustomUser.objects.filter(email=email).exists():
                 messages.error(request, "Email Already Registered!!")
                 return redirect('register')
             
@@ -61,7 +61,7 @@ def register_view(request):
                 messages.error(request, "Name and Last Name must only contain letters!")
                 return redirect('register')
             
-            user = User.objects.create_user(
+            user = CustomUser.objects.create_user(
                 username=form.cleaned_data['email'],
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password'],
@@ -74,7 +74,7 @@ def register_view(request):
             messages.success(request, 'Registration successful. We have sent you a confirmation email to activate your account.')
 
             current_site = get_current_site(request)
-            email_subject = "Confirm your Email @ GFG - Django Login!!"
+            email_subject = "Confirm your Email - Django Login!!"
             message = render_to_string('auth/email_confirmation.html',{
                 
                 'name': user.first_name,
@@ -102,8 +102,8 @@ def logout_view(request):
 def activate(request,uidb64,token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        myuser = User.objects.get(pk=uid)
-    except (TypeError,ValueError,OverflowError,User.DoesNotExist):
+        myuser = CustomUser.objects.get(pk=uid)
+    except (TypeError,ValueError,OverflowError,CustomUser.DoesNotExist):
         myuser = None
 
     if myuser is not None and generate_token.check_token(myuser,token):

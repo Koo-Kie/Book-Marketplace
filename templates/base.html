@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Bookaz{% endblock title %}</title>
+    <title>Bookaz - {% block title %}{% endblock title %}</title>
     <!-- Add your CSS links and other head content here -->
 </head>
 <body>
@@ -78,7 +78,6 @@
         </div>
     </nav>
     
-    <img src="{% static 'cover.png'%}" style="width: 100vw; height: auto;">
 
     <main>
         {% block content %}
