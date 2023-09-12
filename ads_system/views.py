@@ -95,5 +95,8 @@ def ad_view(request):
         else:
             return render(request, 'ads/ad_page.html', {'ad':ad})
 
+@login_required
 def myads(request):
-    return render(request, 'myads.html')
+    ads = request.user.ads
+    print(ads)
+    return render(request, 'ads/myads.html', {'ads':ads})

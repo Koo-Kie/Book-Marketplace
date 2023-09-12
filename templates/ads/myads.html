@@ -1,60 +1,81 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Accueil{% endblock title %}
+{% block title %}Mes annonces{% endblock title %}
 
 {% block content %}
-<img src="{% static 'cover.png'%}" style="width: 100vw; height: auto;">
+  <h1>Mes annonces:</h1>
   <div class="ad-container">
-    {% for ad in ads %}
-      <a href="/ad?ad_id={{ ad.ad_id }}" class="ad-link">
-        <div class="ad-item">
-          <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
-          <h3>{{ ad.title }}</h3>
+    {% for ad in ads.all %}
+      <div class="ad-item">
+        <a href="/ad?ad_id={{ ad.ad_id }}" class="ad-link">
+          <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="ad-image">
+          <h3 class="ad-title">{{ ad.title }}</h3>
           <p class="ad-price">TND {{ ad.price }}</p>
-        </div>
-      </a>
+          <div class="ad-actions">
+            <a href="/delete-ad?ad_id={{ ad.ad_id }}" class="delete-link">Supprimer</a>
+            <a href="/edit-ad?ad_id={{ ad.ad_id }}" class="edit-link">Modifier</a>
+          </div>
+        </a>
+      </div>
     {% endfor %}
   </div>
   <style>
+    /* Basic styles for the ad container */
     .ad-container {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
-      max-width: 1080px; /* Adjust as needed */
-      margin: 0 auto;
+      gap: 20px; /* Adjust the gap between ad items */
     }
-  
-    .ad-link {
-      text-decoration: none; /* Remove underline from links */
-      color: inherit; /* Inherit the text color */
-      width: calc(25% - 20px); /* 4 ads per row with 20px spacing between them */
-      margin-bottom: 20px;
-    }
-  
+
+    /* Styles for individual ad items */
     .ad-item {
-      background-color: #f2f2f2; /* Background color for the ad container */
+      background-color: #f0f0f0; /* Background color for each ad item */
       padding: 20px;
-      box-sizing: border-box;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px; /* Adjust the width of each ad item as needed */
       text-align: center;
-      border-radius: 8px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow */
+      transition: transform 0.2s ease-in-out;
     }
-  
-    .ad-item img {
+
+    .ad-item:hover {
+      transform: scale(1.05); /* Add a slight scale effect on hover */
+    }
+
+    /* Styles for the ad image */
+    .ad-image {
       max-width: 100%;
       height: auto;
-      border-radius: 4px;
+      border-radius: 5px;
     }
-  
-    .ad-item h3 {
-      font-size: 16px;
+
+    /* Styles for the ad title */
+    .ad-title {
+      font-size: 1.2rem;
       margin-top: 10px;
     }
-  
-    .ad-price {
-      font-size: 14px;
-      color: #333;
+
+    /* Styles for the ad actions (delete and edit links) */
+    .ad-actions {
+      margin-top: 10px;
+    }
+
+    .delete-link,
+    .edit-link {
+      text-decoration: none;
+      margin: 5px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #ff5a5f; /* Red color for delete */
+      color: white;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .delete-link:hover,
+    .edit-link:hover {
+      background-color: #e50005; /* Darker red on hover */
     }
   </style>
 {% endblock %}
