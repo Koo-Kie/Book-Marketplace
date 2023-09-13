@@ -100,3 +100,36 @@ def myads(request):
     ads = request.user.ads
     print(ads)
     return render(request, 'ads/myads.html', {'ads':ads})
+
+@login_required
+def delete_ad(request):
+    user = request.user
+    ad_id = int(request.GET.get('ad_id'))
+    for ad in user.ads.all():
+        if ad.ad_id == ad_id:
+            user.ads.remove(ad)
+            user.save()
+            ad.delete()
+            return redirect('/myads')
+    return redirect('/myads')
+
+@login_required
+def edit_ad(request):
+    user = request.user
+    ad_id = int(request.GET.get('ad_id'))
+    ad = False
+    for ad in user.ads.all():
+        if ad.ad_id == ad_id:
+            ad = ad
+            break
+    if not ad:
+        return render('/myads')
+    
+    if request.method == "POST":
+        ad_type = request.GET.get("ad_type")
+        title = request.GET.get("title")
+        description = request.GET.get("description")
+        price = request.GET.get("price")
+        image = request.GET.get("image")
+        bundle_items = request.GET.get("bundle_items")
+    return render(request, 'ads/edit_ad.html', {'ad':ad})

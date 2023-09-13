@@ -8,6 +8,8 @@ urlpatterns = [
     path("support/", views.support),
     path("create_ad/", views.create_ad),
     path("myads/", views.myads),
+    path("delete-ad/", views.delete_ad),
+    path("edit-ad/", views.edit_ad),
     path("ad/", views.ad_view)
 ]
 if settings.DEBUG:

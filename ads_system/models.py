@@ -16,7 +16,7 @@ class ClassifiedAd(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField()
-    ad_type = models.CharField(max_length=10, choices=[('Unitaire', 'Unitaire'), ('Pack', 'Pack')], default='single')
+    ad_type = models.CharField(max_length=10, choices=[('Unitaire', 'Unitaire'), ('Pack', 'Pack')], default='Unitaire')
     bundle_items = models.TextField(blank=True)
 
     def __str__(self):

@@ -1,0 +1,160 @@
+{% extends '../base.html' %}
+
+{% block title %}Créer une annonce{% endblock title %}
+
+{% block content %}
+
+    <h1>Modifier votre annonce</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Choose between bundle or single item -->
+        <div>
+            <label>Type:</label>
+            {% if ad.ad_type == Unitaire %}
+            <input type="radio" name="ad_type" value="single" id="singleItem" checked>
+            <label for="singleItem">Un seul article</label>
+            <input type="radio" name="ad_type" value="bundle" id="bundle">
+            <label for="bundle">Pack</label>
+            {% else %}
+            <input type="radio" name="ad_type" value="single" id="singleItem">
+            <label for="singleItem">Un seul article</label>
+            <input type="radio" name="ad_type" value="bundle" id="bundle" checked>
+            <label for="bundle">Pack</label>
+            {% endif %}
+        </div>
+
+        <!-- Ad Info Fields -->
+        <div>
+            <label for="title">Titre de l'annonce:</label>
+            <input type="text" name="title" id="title" value="{{ad.title}}" required>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" required>{{ad.description}}</textarea>
+        </div>
+        <div>
+            <label for="price">Prix:</label>
+            <input type="number" value="{{ad.price}}" name="price" id="price" required>
+        </div>
+        <div>
+            <label for="id_image">Image:</label>
+            <img src="{{ad.image.url}}">
+            <input type="file" name="image" id="id_image">
+        </div>
+
+        <!-- Bundle List Creator (Initially hidden) -->
+        <div id="bundleFields">
+            <h2>Article(s) dans l'annonce:</h2>
+            <ul>
+                {% for item in ad.bundle_items %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            <div>
+                <label for="itemName">Item Name:</label>
+                <input type="text" name="itemName" id="itemName">
+                <button type="button" id="addItem">Add Item</button>
+            </div>
+            <input type="hidden" name="bundle_items" id="bundleItemsField">
+        </div>
+
+        <button type="submit">Créer</button>
+
+    </form>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        button[type="submit"],
+        #addItem {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover,
+        #addItem:hover {
+            background-color: #0056b3;
+        }
+
+        #bundleFields {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #bundleFields h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .ad-preview {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .ad-preview h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+</style>
+
+{% endblock content %}
