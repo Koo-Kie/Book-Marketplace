@@ -7,7 +7,7 @@ def generate_unique_id():
     return random.randint(10000000, 99999999)
     
 class CustomUser(AbstractUser):
-    ads = models.ManyToManyField('ClassifiedAd', related_name='users')
+    ads = models.ManyToManyField('ClassifiedAd', related_name='users', blank=True)
 
 class ClassifiedAd(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)

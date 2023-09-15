@@ -9,8 +9,9 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from . tokens import generate_token
-
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.hashers import check_password
 
 def login_view(request):
     if request.method == 'POST':
@@ -49,8 +50,12 @@ def register_view(request):
                 messages.error(request, "Email Already Registered!!")
                 return redirect('register')
             
-            if len(username)>20:
-                messages.error(request, "Username must be under 20 charcters!!")
+            if len(first_name)>20 or len(last_name)>20:
+                messages.error(request, "Le nom et le prénom ne doivent pas dépasser les 20 caractères.")
+                return redirect('register')
+            
+            if len(first_name)<2 or len(last_name)<2:
+                messages.error(request, "Le nom et le prénom doivent contenir au moins 2 caractères.")
                 return redirect('register')
             
             if pass1 != pass2:
@@ -74,7 +79,7 @@ def register_view(request):
             messages.success(request, 'Registration successful. We have sent you a confirmation email to activate your account.')
 
             current_site = get_current_site(request)
-            email_subject = "Confirm your Email - Django Login!!"
+            email_subject = "Email de confirmation Bookaz"
             message = render_to_string('auth/email_confirmation.html',{
                 
                 'name': user.first_name,
@@ -115,3 +120,44 @@ def activate(request,uidb64,token):
         return redirect('login')
     else:
         return render(request,'auth/activation_failed.html')
+    
+@login_required
+def settings(request):
+
+    if request.method == 'POST':
+        first_name = request.POST.get('fname').strip()
+        last_name = request.POST.get('lname').strip()
+        old_pass = request.POST.get('old_pass').strip()
+        new_pass = request.POST.get('new_pass').strip()
+
+        if len(first_name)>20 or len(last_name)>20:
+                messages.error(request, "Le nom et le prénom ne doivent pas dépasser les 20 caractères.")
+                return redirect('/settings')
+            
+        if len(first_name)<2 or len(last_name)<2:
+            messages.error(request, "Le nom et le prénom doivent contenir au moins 2 caractères.")
+            return redirect('/settings')
+        
+        if not first_name.isalpha() or not first_name.isalpha():
+                messages.error(request, "Le nom et le prénom doivent contenir uniquement des letters!")
+                return redirect('/settings')
+        
+        request.user.last_name = last_name
+        request.user.first_name = first_name
+        request.user.save()
+        
+        if old_pass == "" and new_pass == "":
+            pass
+        else:
+            if old_pass == new_pass:
+                messages.error(request, "Votre nouveau mot de passe est similaire à votre ancien!")
+                return redirect('/settings')
+            
+            if check_password(old_pass, request.user.password):
+                request.user.set_password(new_pass)
+            else:
+                messages.error(request, "Votre ancien mot de passe ne correspond pas!")
+                return redirect('/settings')
+        
+        messages.success(request, 'Votre profile a été mis à jour avec succès.')
+    return render(request, 'settings.html', {'user':request.user})

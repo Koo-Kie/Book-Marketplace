@@ -7,7 +7,8 @@ import time
 from authentication.gmail import sendingMessage
 from django.template.loader import render_to_string
 from django.contrib import messages
-
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth import get_user_model
 
 def home(request):
     ads = ClassifiedAd.objects.all()
@@ -140,3 +141,6 @@ def edit_ad(request):
         return redirect('/myads')
 
     return render(request, 'ads/edit_ad.html', {'ad':ad})
+
+
+
