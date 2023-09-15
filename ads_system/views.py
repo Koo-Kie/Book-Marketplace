@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseBadRequest
 from .models import *
 from django.contrib.auth.decorators import login_required
 import ast
@@ -43,37 +44,31 @@ def support(request):
 def create_ad(request):
     if request.method == 'POST':
 
-        ad_type = request.POST.get('ad_type')
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        price = request.POST.get('price')
-        image = request.FILES.get('image')
-        bundle_items = request.POST.get('bundle_items')
-
-
-        if ad_type == 'single':
-            ad = ClassifiedAd.objects.create(
-                user= request.user,
-                title=title,
-                description=description,
-                price=price,
-                image=image,
-                ad_type=ad_type
-            )
-            request.user.ads.add(ad)
+        title = request.POST.get('title', '')
+        description = request.POST.get('description', '')
+        price = request.POST.get('price', '')
+        image = request.FILES.get('image', '')
+        bundle_items = request.POST.get('bundle_items', '')
+        
+        if len(ast.literal_eval(bundle_items)) == 1:
+            ad_type = "Unitaire"
+            return render(request, 'ads/create_ad.html')
+        elif len(ast.literal_eval(bundle_items)) >= 2:
+            ad_type = "Pack"
         else:
-            ad = ClassifiedAd.objects.create(
-                user= request.user,
-                title=title,
-                description=description,
-                price=price,
-                image=image,
-                ad_type=ad_type,
-                bundle_items=bundle_items
-            )
-            request.user.ads.add(ad)
+            messages.error(request, 'Veuillez ajouter au moins un livre dans votre annonce.')
+            return render(request, 'ads/create_ad.html', {'title': title, 'description':description, 'price':price})
 
-
+        ad = ClassifiedAd.objects.create(
+            user= request.user,
+            title=title,
+            description=description,
+            price=price,
+            image=image,
+            ad_type=ad_type,
+            bundle_items=bundle_items
+        )
+        request.user.ads.add(ad)
         
         return redirect('/')  # Redirect to the ad listing page after creating the ad
 
@@ -126,10 +121,22 @@ def edit_ad(request):
         return render('/myads')
     
     if request.method == "POST":
-        ad_type = request.GET.get("ad_type")
-        title = request.GET.get("title")
-        description = request.GET.get("description")
-        price = request.GET.get("price")
-        image = request.GET.get("image")
-        bundle_items = request.GET.get("bundle_items")
+
+        ad_type = request.POST.get("ad_type")
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        price = request.POST.get("price")
+        image = request.FILES.get("image")
+        bundle_items = request.POST.get("bundle_items")
+
+        ad.ad_type = ad_type
+        ad.title = title
+        ad.description = description
+        ad.price = price
+        if not image == None:
+            ad.image = image
+        ad.bundle_items = bundle_items
+        ad.save()
+        return redirect('/myads')
+
     return render(request, 'ads/edit_ad.html', {'ad':ad})

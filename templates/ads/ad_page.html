@@ -57,7 +57,7 @@
         <p class="ad-price">TND {{ ad.price }}</p>
         <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
         <p><strong>Type:</strong> {{ ad.ad_type }}</p>
-        <p><strong>Éléments dans le pack:</strong></p>
+        <p><strong>Élément(s) dans l'annonce:</strong></p>
         <ul>
             {% for item in ad.bundle_items %}
                 <li>{{ item }}</li>

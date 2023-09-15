@@ -9,27 +9,19 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- Choose between bundle or single item -->
-        <div>
-            <label>Type:</label>
-            <input type="radio" name="ad_type" value="single" id="singleItem" checked>
-            <label for="singleItem">Un seul article</label>
-            <input type="radio" name="ad_type" value="bundle" id="bundle">
-            <label for="bundle">Pack</label>
-        </div>
 
         <!-- Ad Info Fields -->
         <div>
             <label for="title">Titre de l'annonce:</label>
-            <input type="text" name="title" id="title" required>
+            <input type="text" name="title" id="title" value="{{title}}" required>
         </div>
         <div>
             <label for="description">Description:</label>
-            <textarea name="description" id="description" required></textarea>
+            <textarea name="description" id="description" required>{{description}}</textarea>
         </div>
         <div>
             <label for="price">Prix:</label>
-            <input type="number" name="price" id="price" required>
+            <input type="number" name="price" id="price" value="{{price}}" required>
         </div>
         <div>
             <label for="id_image">Image:</label>
@@ -38,16 +30,16 @@
 
         <!-- Bundle List Creator (Initially hidden) -->
         <div id="bundleFields">
-            <h2>Article(s) dans l'annonce:</h2>
+            <h2>Livre(s) dans l'annonce:</h2>
             <ul id="itemList">
                 <!-- List items will be dynamically added here -->
             </ul>
             <div>
-                <label for="itemName">Item Name:</label>
+                <label for="itemName">Livre:</label>
                 <input type="text" name="itemName" id="itemName">
-                <button type="button" id="addItem">Add Item</button>
+                <button type="button" id="addItem">Ajouter le livre</button>
             </div>
-            <input type="hidden" name="bundle_items" id="bundleItemsField">
+            <input type="hidden" name="bundle_items" id="bundleItemsField" required>
         </div>
 
         <button type="submit">Créer</button>
@@ -204,7 +196,7 @@
         }
 
         #bundleFields {
-            display: none;
+            display: block;
             margin-top: 20px;
         }
 
