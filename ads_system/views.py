@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest
 from .models import *
 from django.contrib.auth.decorators import login_required
-import ast
+import ast, json
 import time
 from authentication.gmail import sendingMessage
 from django.template.loader import render_to_string
@@ -45,12 +45,14 @@ def support(request):
 def create_ad(request):
     if request.method == 'POST':
 
+        print(request.POST)
+
         title = request.POST.get('title', '')
         description = request.POST.get('description', '')
         price = request.POST.get('price', '')
         image = request.FILES.get('image', '')
         bundle_items = request.POST.get('bundle_items', '')
-        
+
         if len(ast.literal_eval(bundle_items)) == 1:
             ad_type = "Unitaire"
             return render(request, 'ads/create_ad.html')
@@ -143,4 +145,8 @@ def edit_ad(request):
     return render(request, 'ads/edit_ad.html', {'ad':ad})
 
 
+def categories(request):
+    return render(request, "ads/categories/categories.html")
 
+def search(request):
+    return render(request, "ads/search.html")

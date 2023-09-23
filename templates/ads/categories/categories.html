@@ -1,0 +1,73 @@
+{% extends '../../base.html' %}
+
+{% block title %}Catégories{% endblock title %}
+
+{% block content %}
+<h1>Classes</h1>
+<ul id="classes">
+    <li><a href="/search?classe=6ème">6ème</a></li>
+    <li><a href="/search?classe=5ème">5ème</a></li>
+    <li><a href="/search?classe=4ème">4ème</a></li>
+    <li><a href="/search?classe=3ème">3ème</a></li>
+    <li><a href="/search?classe=Seconde">Seconde</a></li>
+    <li><a href="/search?classe=Première">Première</a></li>
+    <li><a href="/search?classe=Terminale">Terminale</a></li>
+</ul>
+
+<h1>Matières</h1>
+<ul id="matieres">
+    <li><a href="/search?matiere=Mathématiques">Mathématiques</a></li>
+    <li><a href="/search?matiere=Français">Français</a></li>
+    <li><a href="/search?matiere=Physique">Physique</a></li>
+    <li><a href="/search?matiere=SVT">SVT</a></li>
+    <li><a href="/search?matiere=SES">SES</a></li>
+    <li><a href="/search?matiere=Philosophie">Philosophie</a></li>
+    <li><a href="/search?matiere=Histoire">Histoire</a></li>
+    <li><a href="/search?matiere=Géographie">Géographie</a></li>
+    <li><a href="/search?matiere=Enseignement%20Scientifique">Enseignement Scientifique</a></li>
+    <li><a href="/search?matiere=Anglais">Anglais</a></li>
+    <li><a href="/search?matiere=Espagnol">Espagnol</a></li>
+    <li><a href="/search?matiere=Allemand">Allemand</a></li>
+    <li><a href="/search?matiere=Italien">Italien</a></li>
+</ul>
+
+
+<style>
+    /* Style for the sections containing buttons */
+#classes,
+#matieres {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    text-decoration: none;
+}
+
+#classes li a,
+#matieres li a {
+    text-decoration: none;
+    color: black;
+}
+
+#classes li,
+#matieres li {
+    flex: 1;
+    margin: 10px;
+    padding: 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#classes li:hover,
+#matieres li:hover {
+    background-color: #0056b3;
+}
+
+</style>
+
+{% endblock content %}

@@ -28,17 +28,57 @@
             <input type="file" name="image" id="id_image" required>
         </div>
 
-        <!-- Bundle List Creator (Initially hidden) -->
+        <!-- Bundle List Creator -->
         <div id="bundleFields">
             <h2>Livre(s) dans l'annonce:</h2>
             <ul id="itemList">
-                <!-- List items will be dynamically added here -->
+                <!-- Book items will be dynamically added here -->
             </ul>
-            <div>
-                <label for="itemName">Livre:</label>
-                <input type="text" name="itemName" id="itemName">
-                <button type="button" id="addItem">Ajouter le livre</button>
+            <div class="book-fields">
+                <div>
+                    <label for="bookTitle">Titre:</label>
+                    <input type="text" name="bookTitle" class="book-title">
+                </div>
+                <div>
+                    <label for="bookPublisher">Editeur:</label>
+                    <input type="text" name="bookPublisher" class="book-publisher">
+                </div>
+                <div>
+                    <label for="bookClass">Classe:</label>
+                    <select name="bookClass" class="book-class">
+                        <option value="6ème">6ème</option>
+                        <option value="5ème">5ème</option>
+                        <option value="4ème">4ème</option>
+                        <option value="3ème">3ème</option>
+                        <option value="Seconde">Seconde</option>
+                        <option value="Première">Première</option>
+                        <option value="Terminale">Terminale</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="bookISBN">ISBN:</label>
+                    <input type="text" name="bookISBN" class="book-isbn">
+                </div>
+                <div>
+                    <label for="bookSubject">Matière:</label>
+                    <select name="bookSubject" class="book-subject">
+                        <option value="Mathématiques">Mathématiques</option>
+                        <option value="Français">Français</option>
+                        <option value="Physique">Physique</option>
+                        <option value="SVT">SVT</option>
+                        <option value="SES">SES</option>
+                        <option value="Philosophie">Philosophie</option>
+                        <option value="Histoire">Histoire</option>
+                        <option value="Géographie">Géographie</option>
+                        <option value="ES">Enseignement Scientifique</option>
+                        <option value="Anglais">Anglais</option>
+                        <option value="Espagnol">Espagnol</option>
+                        <option value="Allemand">Allemand</option>
+                        <option value="Italien">Italien</option>
+                    </select>
+                </div>
             </div>
+            <button type="button" id="addItem">Ajouter un livre</button>
             <input type="hidden" name="bundle_items" id="bundleItemsField" required>
         </div>
 
@@ -56,47 +96,62 @@
     </div>
 
     <script>
-        // Toggle bundle fields based on the selected type
         const adTypeRadio = document.querySelectorAll('input[name="ad_type"]');
         const bundleFields = document.getElementById('bundleFields');
         const itemList = document.getElementById('itemList');
         const itemNameInput = document.getElementById('itemName');
         const addItemButton = document.getElementById('addItem');
+        const bookList = [];
 
-        // adTypeRadio.forEach(radio => {
-        //     radio.addEventListener('change', () => {
-        //         if (radio.value === 'bundle') {
-        //             bundleFields.style.display = 'block';
-        //         } else {
-        //             bundleFields.style.display = 'none';
-        //         }
-        //     });
-        // });
-
-        // Dynamically add bundle items to the list
+        // Dynamically add book items to the list
         addItemButton.addEventListener('click', () => {
-            const itemName = itemNameInput.value.trim();
-            if (itemName) {
-                const listItem = document.createElement('li');
-                listItem.textContent = itemName;
-                itemList.appendChild(listItem);
-                itemNameInput.value = '';
-            }
-        });
+        const bookTitle = document.querySelector('.book-title').value.trim();
+        const bookPublisher = document.querySelector('.book-publisher').value.trim();
+        const bookClass = document.querySelector('.book-class').value;
+        const bookISBN = document.querySelector('.book-isbn').value.trim();
+        const bookSubject = document.querySelector('.book-subject').value;
 
-        const adForm = document.querySelector('form');
-        adForm.addEventListener('submit', (event) => {
-            // Prevent the default form submission
-            event.preventDefault();
+        if (bookTitle && bookPublisher && bookClass && bookISBN && bookSubject) {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <strong>Titre:</strong> ${bookTitle}<br>
+                <strong>Editeur:</strong> ${bookPublisher}<br>
+                <strong>Classe:</strong> ${bookClass}<br>
+                <strong>ISBN:</strong> ${bookISBN}<br>
+                <strong>Matière:</strong> ${bookSubject}<br>
+                <button type="button" class="remove-book">Supprimer le livre</button>
+            `;
 
-            // Serialize the bundle items as a JSON array
-            const bundleItems = Array.from(itemList.children).map(item => item.textContent);
+            itemList.appendChild(listItem);
+
+            // Add event listener to remove the added book
+            const removeButton = listItem.querySelector('.remove-book');
+            removeButton.addEventListener('click', () => {
+                itemList.removeChild(listItem);
+            });
+
+            const bookInfo = {
+                title: bookTitle,
+                publisher: bookPublisher,
+                isbn: bookISBN,
+                class: bookClass,
+                subject: bookSubject,
+            };
+
+            // Add the book information to the array
+            bookList.push(bookInfo);
+
+            // Update the hidden input field with the JSON representation of the array
             const bundleItemsField = document.getElementById('bundleItemsField');
-            bundleItemsField.value = JSON.stringify(bundleItems);
+            bundleItemsField.value = JSON.stringify(bookList);
 
-            // Submit the form
-            adForm.submit();
-        });
+            // Clear input fields
+            document.querySelector('.book-title').value = '';
+            document.querySelector('.book-publisher').value = '';
+            document.querySelector('.book-isbn').value = '';
+        }
+    });
+
 
         // Update the ad preview when form inputs change
         const titleInput = document.getElementById('title');
@@ -210,9 +265,13 @@
             padding: 0;
         }
 
-        ul li {
+        #itemList li {
             font-size: 16px;
             margin-bottom: 5px;
+            border: #333 solid 3px;
+            border-radius: 10px;
+            padding: 10px;
+            width: fit-content;
         }
         .ad-preview {
         margin-top: 20px;

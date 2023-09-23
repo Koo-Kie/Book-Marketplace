@@ -10,7 +10,9 @@ urlpatterns = [
     path("myads/", views.myads),
     path("delete-ad/", views.delete_ad),
     path("edit-ad/", views.edit_ad),
-    path("ad/", views.ad_view)
+    path("ad/", views.ad_view),
+    path("categories/", views.categories),
+    path("search/", views.search)
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
