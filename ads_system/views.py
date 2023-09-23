@@ -146,7 +146,10 @@ def edit_ad(request):
 
 
 def categories(request):
-    return render(request, "ads/categories/categories.html")
+    
+    return render(request, "ads/categories.html")
 
 def search(request):
+    if request.method == 'POST':
+        print(request.POST)
     return render(request, "ads/search.html")

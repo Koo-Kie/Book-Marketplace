@@ -1,0 +1,117 @@
+{% extends '../base.html' %}
+
+{% block title %}Rechercher{% endblock title %}
+
+{% block content %}
+
+<h1>Rechercher des livres</h1>
+
+<form method="POST" action="/search">
+    <!-- Title input field -->
+    <div>
+        <label for="title">Titre:</label>
+        <input type="text" name="title" id="title">
+    </div>
+
+    <!-- Author input field -->
+    <div>
+        <label for="editor">Editeur:</label>
+        <input type="text" name="author" id="editor">
+    </div>
+
+    <!-- Category input field -->
+    <div>
+        <label for="class">Classe:</label>
+        <select name="class" id="class">
+            <option value="6ème">6ème</option>
+            <option value="5ème">5ème</option>
+            <option value="4ème">4ème</option>
+            <option value="3ème">3ème</option>
+            <option value="Seconde">Seconde</option>
+            <option value="Première">Première</option>
+            <option value="Terminale">Terminale</option>
+        </select>
+    </div>
+
+    <!-- ISBN input field -->
+    <div>
+        <label for="isbn">ISBN:</label>
+        <input type="text" name="isbn" id="isbn">
+    </div>
+
+    <!-- Subject input field -->
+    <div>
+        <label for="subject">Matière:</label>
+        <select name="subject" id="subject">
+            <option value="Mathématiques">Mathématiques</option>
+            <option value="Français">Français</option>
+            <option value="Physique">Physique</option>
+            <option value="SVT">SVT</option>
+            <option value="SES">SES</option>
+            <option value="Philosophie">Philosophie</option>
+            <option value="Histoire">Histoire</option>
+            <option value="Géographie">Géographie</option>
+            <option value="ES">Enseignement Scientifique</option>
+            <option value="Anglais">Anglais</option>
+            <option value="Espagnol">Espagnol</option>
+            <option value="Allemand">Allemand</option>
+            <option value="Italien">Italien</option>
+            <!-- Add more options for subjects -->
+        </select>
+    </div>
+
+    <button type="submit">Rechercher</button>
+</form>
+
+<style>
+    /* Style for the search page */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+</style>
+
+{% endblock content %}
