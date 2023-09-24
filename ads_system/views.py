@@ -150,6 +150,12 @@ def categories(request):
     return render(request, "ads/categories.html")
 
 def search(request):
-    if request.method == 'POST':
-        print(request.POST)
+    classe = request.GET.get('class')
+    matiere = request.GET.get('subject')
+    titre = request.GET.get('title')
+    editeur = request.GET.get('editor')
+    isbn = request.GET.get('isbn')
+
+    print(classe, matiere, titre, editeur, isbn)
+    
     return render(request, "ads/search.html")

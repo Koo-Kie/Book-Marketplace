@@ -6,7 +6,8 @@
 
 <h1>Rechercher des livres</h1>
 
-<form method="POST" action="/search">
+<form method="GET" action="/search/">
+    <!-- {% csrf_token %} -->
     <!-- Title input field -->
     <div>
         <label for="title">Titre:</label>
@@ -16,7 +17,7 @@
     <!-- Author input field -->
     <div>
         <label for="editor">Editeur:</label>
-        <input type="text" name="author" id="editor">
+        <input type="text" name="editor" id="editor">
     </div>
 
     <!-- Category input field -->
