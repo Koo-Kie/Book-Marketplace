@@ -59,13 +59,13 @@
         <p><strong>Type:</strong> {{ ad.ad_type }}</p>
         <p><strong>Élément(s) dans l'annonce:</strong></p>
         <ul>
-            {% for book in ad.bundle_items %}
+            {% for book in ad.bundle_items.all %}
                 <li>
-                    <strong>Title:</strong> {{ book.title }}<br>
-                    <strong>Publisher:</strong> {{ book.publisher }}<br>
+                    <strong>Title:</strong> {{ book.titre }}<br>
+                    <strong>Publisher:</strong> {{ book.editeur }}<br>
                     <strong>ISBN:</strong> {{ book.isbn }}<br>
-                    <strong>Class:</strong> {{ book.class }}<br>
-                    <strong>Subject:</strong> {{ book.subject }}
+                    <strong>Class:</strong> {{ book.classe }}<br>
+                    <strong>Subject:</strong> {{ book.matiere }}
                 </li>
             {% endfor %}
         </ul>

@@ -45,8 +45,6 @@ def support(request):
 def create_ad(request):
     if request.method == 'POST':
 
-        print(request.POST)
-
         title = request.POST.get('title', '')
         description = request.POST.get('description', '')
         price = request.POST.get('price', '')
@@ -61,16 +59,26 @@ def create_ad(request):
         else:
             messages.error(request, 'Veuillez ajouter au moins un livre dans votre annonce.')
             return render(request, 'ads/create_ad.html', {'title': title, 'description':description, 'price':price})
-
+        
         ad = ClassifiedAd.objects.create(
             user= request.user,
             title=title,
             description=description,
             price=price,
             image=image,
-            ad_type=ad_type,
-            bundle_items=bundle_items
+            ad_type=ad_type
         )
+
+        for item in ast.literal_eval(bundle_items):
+            book = Book.objects.create(
+                titre=item.get('title'),
+                editeur=item.get('publisher'),
+                classe=item.get('class'),
+                isbn=int(item.get('isbn').replace('-', '')),
+                matiere=item.get('subject')
+            )
+            ad.bundle_items.add(book)
+        
         request.user.ads.add(ad)
         
         return redirect('/')  # Redirect to the ad listing page after creating the ad
@@ -84,10 +92,6 @@ def ad_view(request):
         return redirect('/')
     else:
         ad = ClassifiedAd.objects.get(ad_id= ad_id)
-        try:
-            ad.bundle_items = ast.literal_eval(ad.bundle_items)
-        except:
-            pass
         if ad == None:
             return redirect('/')
         else:
@@ -153,7 +157,7 @@ def search(request):
     classe = request.GET.get('class')
     matiere = request.GET.get('subject')
     titre = request.GET.get('title')
-    editeur = request.GET.get('editor')
+    editeur = request.GET.get('publisher')
     isbn = request.GET.get('isbn')
 
     print(classe, matiere, titre, editeur, isbn)

@@ -21,7 +21,7 @@
         </div>
         <div>
             <label for="price">Prix:</label>
-            <input type="number" name="price" id="price" value="{{price}}" required>
+            <input type="number" name="price" id="price" value="{{price}}" oninput=onlyDigit(this) required>
         </div>
         <div>
             <label for="id_image">Image:</label>
@@ -56,8 +56,8 @@
                     </select>
                 </div>
                 <div>
-                    <label for="bookISBN">ISBN:</label>
-                    <input type="text" name="bookISBN" class="book-isbn">
+                    <label for="bookISBN">ISBN (format: 978-0553292715):</label>
+                    <input type="text" name="bookISBN" class="book-isbn" minlength="13" maxlength="13">
                 </div>
                 <div>
                     <label for="bookSubject">Matière:</label>
@@ -111,7 +111,7 @@
         const bookISBN = document.querySelector('.book-isbn').value.trim();
         const bookSubject = document.querySelector('.book-subject').value;
 
-        if (bookTitle && bookPublisher && bookClass && bookISBN && bookSubject) {
+        if (bookTitle && bookPublisher && bookClass && bookISBN && bookSubject && bookISBN.length == 13) {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
                 <strong>Titre:</strong> ${bookTitle}<br>
@@ -151,6 +151,25 @@
             document.querySelector('.book-isbn').value = '';
         }
     });
+
+    const isbnInput = document.querySelector('.book-isbn');
+
+    // Add an event listener for input changes
+    isbnInput.addEventListener('input', function () {
+        // Remove any non-numeric characters (e.g., hyphens)
+        const cleanedInput = this.value.replace(/[^0-9]/g, '');
+        this.value = cleanedInput
+
+        // Format the ISBN-13 with hyphens after the first 3 characters
+        if (cleanedInput.length >= 3) {
+            const formattedISBN = cleanedInput.slice(0, 3) + '-' + cleanedInput.slice(3);
+            this.value = formattedISBN;
+        }
+    });
+
+    function onlyDigit(field) {
+            field.value = field.value.replace(/[^0-9]/g, '')
+        }
 
 
         // Update the ad preview when form inputs change
