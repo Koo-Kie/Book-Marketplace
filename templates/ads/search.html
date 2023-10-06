@@ -24,6 +24,7 @@
     <div>
         <label for="class">Classe:</label>
         <select name="class" id="class">
+            <option value="">------</option>
             <option value="6ème">6ème</option>
             <option value="5ème">5ème</option>
             <option value="4ème">4ème</option>
@@ -44,6 +45,7 @@
     <div>
         <label for="subject">Matière:</label>
         <select name="subject" id="subject">
+            <option value="">------</option>
             <option value="Mathématiques">Mathématiques</option>
             <option value="Français">Français</option>
             <option value="Physique">Physique</option>
@@ -64,7 +66,84 @@
     <button type="submit">Rechercher</button>
 </form>
 
+<!-- Display the ads -->
+<div class="ads-list">
+    <h2>Résultats de la recherche</h2>
+    <ul>
+        {% for ad in ads %}
+            <li>
+                <h3>{{ ad.title }}</h3>
+                <p>{{ ad.description }}</p>
+                <p>Prix: {{ ad.price }}</p>
+                <img src="{{ ad.image.url }}">
+            </li>
+        {% empty %}
+            <p>Aucune annonce trouvée.</p>
+        {% endfor %}
+    </ul>
+    <!-- Pagination links -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if ads.has_previous %}
+                <a href="?page=1">&laquo; Première page</a>
+                <a href="?page={{ ads.previous_page_number }}">Page Précédente</a>
+            {% endif %}
+
+            <span class="current-page">{{ ads.number }}</span>
+
+            {% if ads.has_next %}
+                <a href="?page={{ ads.next_page_number }}">Page suivante</a>
+                <a href="?page={{ ads.paginator.num_pages }}">Dernière page &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
 <style>
+    /* Your CSS styles for the ads list */
+    .ads-list {
+        margin-top: 20px;
+    }
+    .ads-list img{
+        width: 300px;
+        height: auto;
+    }
+/* 
+    h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    } */
+
+    .pagination {
+        margin-top: 20px;
+    }
+
+    .step-links {
+        display: inline-block;
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .current-page {
+        font-weight: bold;
+    }
+
     /* Style for the search page */
 h1 {
     font-size: 24px;

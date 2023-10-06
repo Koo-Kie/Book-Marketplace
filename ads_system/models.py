@@ -15,6 +15,7 @@ class Book(models.Model):
     classe = models.CharField(max_length=200, null=True)
     isbn = models.IntegerField(null=True)
     matiere = models.CharField(max_length=200, null=True)
+    ad = models.ForeignKey('ClassifiedAd', on_delete=models.CASCADE, null=True)
     
     def __str__(self):
         return self.titre

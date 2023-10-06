@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import get_user_model
+from django.core.paginator import Paginator
 
 def home(request):
     ads = ClassifiedAd.objects.all()
@@ -75,7 +76,8 @@ def create_ad(request):
                 editeur=item.get('publisher'),
                 classe=item.get('class'),
                 isbn=int(item.get('isbn').replace('-', '')),
-                matiere=item.get('subject')
+                matiere=item.get('subject'),
+                ad=ad
             )
             ad.bundle_items.add(book)
         
@@ -154,12 +156,35 @@ def categories(request):
     return render(request, "ads/categories.html")
 
 def search(request):
-    classe = request.GET.get('class')
-    matiere = request.GET.get('subject')
-    titre = request.GET.get('title')
-    editeur = request.GET.get('publisher')
-    isbn = request.GET.get('isbn')
 
-    print(classe, matiere, titre, editeur, isbn)
+    if request.method == 'GET':
+        classe = request.GET.get('class')
+        matiere = request.GET.get('subject')
+        titre = request.GET.get('title')
+        editeur = request.GET.get('editor')
+        isbn = request.GET.get('isbn')
+        books = Book.objects.all()
+
+        if None not in (titre, matiere, classe):
+            print('Searching')
+            
+            if len(titre.strip()) > 1:
+                books = books.filter(titre__icontains=titre)
+            if len(matiere.strip()) > 1:
+                books = books.filter(matiere__icontains=matiere)
+            if len(classe.strip()) > 1:
+                books = books.filter(classe__icontains=classe)
+            if len(editeur.strip()) > 1:
+                books = books.filter(editeur__icontains=editeur)
+            if len(isbn.strip()) > 1:
+                books = books.filter(isbn__icontains=isbn)
+
+        ads = []
+        for i in books:
+            if i.ad not in ads:
+                ads.append(i.ad)
+        paginator = Paginator(ads, 50)
+        page_number = request.GET.get('page')
+        ads = paginator.get_page(page_number)
     
-    return render(request, "ads/search.html")
+    return render(request, "ads/search.html", {'ads':ads})
