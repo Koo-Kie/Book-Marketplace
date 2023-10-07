@@ -3,161 +3,115 @@
 {% block title %}Rechercher{% endblock title %}
 
 {% block content %}
+<div class="search-container">
+    <h1>Rechercher des livres</h1>
 
-<h1>Rechercher des livres</h1>
-
-<form method="GET" action="/search/">
-    <!-- {% csrf_token %} -->
-    <!-- Title input field -->
-    <div>
-        <label for="title">Titre:</label>
-        <input type="text" name="title" id="title">
-    </div>
-
-    <!-- Author input field -->
-    <div>
-        <label for="editor">Editeur:</label>
-        <input type="text" name="editor" id="editor">
-    </div>
-
-    <!-- Category input field -->
-    <div>
-        <label for="class">Classe:</label>
-        <select name="class" id="class">
-            <option value="">------</option>
-            <option value="6ème">6ème</option>
-            <option value="5ème">5ème</option>
-            <option value="4ème">4ème</option>
-            <option value="3ème">3ème</option>
-            <option value="Seconde">Seconde</option>
-            <option value="Première">Première</option>
-            <option value="Terminale">Terminale</option>
-        </select>
-    </div>
-
-    <!-- ISBN input field -->
-    <div>
-        <label for="isbn">ISBN:</label>
-        <input type="text" name="isbn" id="isbn">
-    </div>
-
-    <!-- Subject input field -->
-    <div>
-        <label for="subject">Matière:</label>
-        <select name="subject" id="subject">
-            <option value="">------</option>
-            <option value="Mathématiques">Mathématiques</option>
-            <option value="Français">Français</option>
-            <option value="Physique">Physique</option>
-            <option value="SVT">SVT</option>
-            <option value="SES">SES</option>
-            <option value="Philosophie">Philosophie</option>
-            <option value="Histoire">Histoire</option>
-            <option value="Géographie">Géographie</option>
-            <option value="ES">Enseignement Scientifique</option>
-            <option value="Anglais">Anglais</option>
-            <option value="Espagnol">Espagnol</option>
-            <option value="Allemand">Allemand</option>
-            <option value="Italien">Italien</option>
-            <!-- Add more options for subjects -->
-        </select>
-    </div>
-
-    <button type="submit">Rechercher</button>
-</form>
-
-<!-- Display the ads -->
-<div class="ads-list">
-    <h2>Résultats de la recherche</h2>
-    <ul>
-        {% for ad in ads %}
-            <li>
-                <h3>{{ ad.title }}</h3>
-                <p>{{ ad.description }}</p>
-                <p>Prix: {{ ad.price }}</p>
-                <img src="{{ ad.image.url }}">
-            </li>
-        {% empty %}
-            <p>Aucune annonce trouvée.</p>
-        {% endfor %}
-    </ul>
-    <!-- Pagination links -->
-    <div class="pagination">
-        <span class="step-links">
-            {% if ads.has_previous %}
-                <a href="?page=1">&laquo; Première page</a>
-                <a href="?page={{ ads.previous_page_number }}">Page Précédente</a>
-            {% endif %}
-
-            <span class="current-page">{{ ads.number }}</span>
-
-            {% if ads.has_next %}
-                <a href="?page={{ ads.next_page_number }}">Page suivante</a>
-                <a href="?page={{ ads.paginator.num_pages }}">Dernière page &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+    <form method="GET" action="/search/" class="search-form">
+        <div class="input-group">
+            <label for="title">Titre:</label>
+            <input type="text" name="title" id="title">
+        </div>
+        <div class="input-group">
+            <label for="editor">Editeur:</label>
+            <input type="text" name="editor" id="editor">
+        </div>
+        <div class="input-group">
+            <label for="class">Classe:</label>
+            <select name="class" id="class">
+                <option value="">------</option>
+                <option value="6ème">6ème</option>
+                <option value="5ème">5ème</option>
+                <option value="4ème">4ème</option>
+                <option value="3ème">3ème</option>
+                <option value="Seconde">Seconde</option>
+                <option value="Première">Première</option>
+                <option value="Terminale">Terminale</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="isbn">ISBN:</label>
+            <input type="text" name="isbn" id="isbn">
+        </div>
+        <div class="input-group">
+            <label for="subject">Matière:</label>
+            <select name="subject" id="subject">
+                <option value="">------</option>
+                <option value="Mathématiques">Mathématiques</option>
+                <option value="Français">Français</option>
+                <option value="Physique">Physique</option>
+                <option value="SVT">SVT</option>
+                <option value="SES">SES</option>
+                <option value="Philosophie">Philosophie</option>
+                <option value="Histoire">Histoire</option>
+                <option value="Géographie">Géographie</option>
+                <option value="ES">Enseignement Scientifique</option>
+                <option value="Anglais">Anglais</option>
+                <option value="Espagnol">Espagnol</option>
+                <option value="Allemand">Allemand</option>
+                <option value="Italien">Italien</option>
+            </select>
+        </div>
+        <button type="submit">Rechercher</button>
+    </form>
 </div>
 
+<!-- Display the ads -->
+<div class="ads-container">
+    <h2>Résultats de la recherche</h2>
+    <ul class="ads-list">
+        {% for ad in ads %}
+            <li class="ad-item">
+                <a href="/ad?ad_id={{ ad.ad_id }}" class="ad-link">
+                    <div class="ad-info">
+                        <h3 class="ad-title">{{ ad.title }}</h3>
+                        <p class="ad-description">{{ ad.description }}</p>
+                        <p class="ad-price">Prix: {{ ad.price }}</p>
+                    </div>
+                    <div class="ad-image">
+                        <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                    </div>
+                </a>
+            </li>
+        {% empty %}
+            <p class="no-results">Aucune annonce trouvée.</p>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Pagination links -->
+<div class="pagination">
+    <span class="step-links">
+        {% if ads.has_previous %}
+            <a href="?page=1">&laquo; Première page</a>
+            <a href="?page={{ ads.previous_page_number }}">Page Précédente</a>
+        {% endif %}
+
+        <span class="current-page">{{ ads.number }}</span>
+
+        {% if ads.has_next %}
+            <a href="?page={{ ads.next_page_number }}">Page suivante</a>
+            <a href="?page={{ ads.paginator.num_pages }}">Dernière page &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 
 <style>
-    /* Your CSS styles for the ads list */
-    .ads-list {
-        margin-top: 20px;
-    }
-    .ads-list img{
-        width: 300px;
-        height: auto;
-    }
-/* 
-    h2 {
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    li {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    } */
-
-    .pagination {
-        margin-top: 20px;
-    }
-
-    .step-links {
-        display: inline-block;
-        border: 1px solid #ccc;
-        padding: 5px 10px;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    }
-
-    .current-page {
-        font-weight: bold;
-    }
-
-    /* Style for the search page */
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
+    .search-container {
+    text-align: center;
+    padding: 20px;
 }
 
-form {
+.search-form {
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     margin: 0 auto;
+}
+
+.input-group {
+    margin-bottom: 20px;
 }
 
 label {
@@ -171,7 +125,6 @@ input[type="text"],
 select {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -192,6 +145,79 @@ button[type="submit"]:hover {
     background-color: #0056b3;
 }
 
-</style>
+/* Style for the ads container */
+.ads-container {
+    margin: 20px;
+    width: 50%;
+    height: auto;
+}
 
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.ads-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.ad-item {
+    width: calc(33.33% - 20px);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.ad-item:hover {
+    transform: scale(1.03);
+}
+
+.ad-link {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.ad-info {
+    padding: 20px;
+}
+
+.ad-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.ad-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.ad-price {
+    font-size: 16px;
+    color: #007bff;
+}
+
+.ad-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px 5px 0 0;
+}
+
+.no-results {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+}
+</style>
 {% endblock content %}
