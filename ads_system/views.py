@@ -130,21 +130,38 @@ def edit_ad(request):
         return render('/myads')
     
     if request.method == "POST":
-
-        ad_type = request.POST.get("ad_type")
+        # [{'title': 'Encanta', 'publisher': 'Palto', 'isbn': '231323232233', 'bookClass': 'Terminale', 'subject': 'Espagnol'}, {'title': 'English Life', 'publisher': 'Oxford', 'isbn': '322323232332', 'bookClass': 'Terminale', 'subject': 'Anglais'}]
+        books = ast.literal_eval(request.POST.get('bookList'))
+        
         title = request.POST.get("title")
         description = request.POST.get("description")
         price = request.POST.get("price")
         image = request.FILES.get("image")
-        bundle_items = request.POST.get("bundle_items")
 
-        ad.ad_type = ad_type
+        if len(books) == 1:
+            ad.ad_type = 'Unitaire'
+        elif len(books) >= 2:
+            ad.ad_type = 'Pack'
+
+        ad.bundle_items.clear()
+        for book in books:
+            new_book = Book.objects.create(
+                titre=book.get('title'),
+                editeur=book.get('publisher'),
+                classe=book.get('class'),
+                isbn=int(book.get('isbn').replace('-', '')),
+                matiere=book.get('subject'),
+                ad=ad
+            )
+            ad.bundle_items.add(new_book)
+
+
         ad.title = title
         ad.description = description
         ad.price = price
         if not image == None:
             ad.image = image
-        ad.bundle_items = bundle_items
+        
         ad.save()
         return redirect('/myads')
 

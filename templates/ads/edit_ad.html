@@ -29,27 +29,174 @@
             <input type="file" name="image" id="id_image">
         </div>
 
-        <!-- Bundle List Creator (Initially hidden) -->
-        <div id="bundleFields">
-            <h2>Article(s) dans l'annonce:</h2>
-            <ul>
-                {% for item in ad.bundle_items.all %}
-                    <li>{{ item.titre }}</li>
-                {% endfor %}
-            </ul>
-            <div>
-                <label for="itemName">Item Name:</label>
-                <input type="text" name="itemName" id="itemName">
-                <button type="button" id="addItem">Add Item</button>
-            </div>
-            <input type="hidden" name="bundle_items" id="bundleItemsField">
-        </div>
+
+                <!-- Bundle List Creator -->
+                <div id="bundleFields">
+                    <h2>Livre(s) dans l'annonce:</h2>
+                    <input type="hidden" name="bookList" id="book-list-input">
+                    <ul id="book-list">
+                        <!-- Book items will be dynamically added here -->
+                        {% for book in ad.bundle_items.all %}
+                            <li>
+                                <strong>Title:</strong> <a id="title">{{ book.titre }}</a><br>
+                                <strong>Publisher:</strong> <a id="publisher">{{ book.editeur }}</a><br>
+                                <strong>ISBN:</strong> <a id="isbn">{{ book.isbn }}</a><br>
+                                <strong>Class:</strong> <a id="class">{{ book.classe }}</a><br>
+                                <strong>Subject:</strong> <a id="subject">{{ book.matiere }}</a>
+                                <button class="delete-button" type="button">Supprimer</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="book-fields">
+                        <div>
+                            <label for="bookTitle">Titre:</label>
+                            <input type="text" name="bookTitle" class="book-title">
+                        </div>
+                        <div>
+                            <label for="bookPublisher">Editeur:</label>
+                            <input type="text" name="bookPublisher" class="book-publisher">
+                        </div>
+                        <div>
+                            <label for="bookClass">Classe:</label>
+                            <select name="bookClass" class="book-class">
+                                <option value="6ème">6ème</option>
+                                <option value="5ème">5ème</option>
+                                <option value="4ème">4ème</option>
+                                <option value="3ème">3ème</option>
+                                <option value="Seconde">Seconde</option>
+                                <option value="Première">Première</option>
+                                <option value="Terminale">Terminale</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="bookISBN">ISBN (format: 978-0553292715):</label>
+                            <input type="text" name="bookISBN" class="book-isbn" minlength="13" maxlength="13">
+                        </div>
+                        <div>
+                            <label for="bookSubject">Matière:</label>
+                            <select name="bookSubject" class="book-subject">
+                                <option value="Mathématiques">Mathématiques</option>
+                                <option value="Français">Français</option>
+                                <option value="Physique">Physique</option>
+                                <option value="SVT">SVT</option>
+                                <option value="SES">SES</option>
+                                <option value="Philosophie">Philosophie</option>
+                                <option value="Histoire">Histoire</option>
+                                <option value="Géographie">Géographie</option>
+                                <option value="ES">Enseignement Scientifique</option>
+                                <option value="Anglais">Anglais</option>
+                                <option value="Espagnol">Espagnol</option>
+                                <option value="Allemand">Allemand</option>
+                                <option value="Italien">Italien</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" id="addItem">Ajouter un livre</button>
+                    
+                </div>
 
         <a href="/myads">Annuler</a>
         <button type="submit">Modifier</button>
 
     </form>
 
+    <script>
+        // Get a reference to the book list
+        const bookList = document.getElementById("book-list");
+        const bookListInput = document.getElementById("book-list-input");
+    
+        // Function to update the hidden input field with the current book list
+        function updateBookListInput() {
+            const bookItems = bookList.querySelectorAll("li");
+            const bookData = [];
+            bookItems.forEach((item) => {
+                const title = item.querySelector("#title").textContent;
+                console.log(title)
+                const publisher = item.querySelector("#publisher").textContent;
+                const isbn = item.querySelector("#isbn").textContent;
+                const bookClass = item.querySelector("#class").textContent;
+                const subject = item.querySelector("#subject").textContent;
+                bookData.push({
+                    title,
+                    publisher,
+                    isbn,
+                    bookClass,
+                    subject,
+                });
+            });
+            bookListInput.value = JSON.stringify(bookData);
+        }
+    
+        // Attach a click event listener to the "Ajouter un livre" button
+        const addItemButton = document.getElementById("addItem");
+        addItemButton.addEventListener("click", function () {
+            // Get the values from the input fields
+            const bookTitle = document.querySelector(".book-title").value;
+            const bookPublisher = document.querySelector(".book-publisher").value;
+            const bookISBN = document.querySelector(".book-isbn").value;
+            const bookClass = document.querySelector(".book-class").value;
+            const bookSubject = document.querySelector(".book-subject").value;
+    
+            // Create a new book item
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <strong>Title:</strong> <a id="title">${bookTitle}</a><br>
+                <strong>Publisher:</strong> <a id="publisher">${bookPublisher}</a><br>
+                <strong>ISBN:</strong> <a id="isbn">${bookISBN}</a><br>
+                <strong>Class:</strong> <a id="class">${bookClass}</a><br>
+                <strong>Subject:</strong> <a id="subject">${bookSubject}</a>
+                <button class="delete-button" type="button">Supprimer</button>
+            `;
+    
+            // Add the new book item to the list
+            bookList.appendChild(li);
+    
+            // Clear input fields
+            document.querySelector(".book-title").value = "";
+            document.querySelector(".book-publisher").value = "";
+            document.querySelector(".book-isbn").value = "";
+            document.querySelector(".book-class").value = "";
+            document.querySelector(".book-subject").value = "";
+    
+            // Update the hidden input field with the updated book list
+            updateBookListInput();
+        });
+    
+        // Attach a click event listener to the book list for deleting books
+        bookList.addEventListener("click", function (event) {
+            if (event.target.classList.contains("delete-button")) {
+                // Find the parent li element and remove it when the delete button is clicked
+                const li = event.target.parentElement;
+                bookList.removeChild(li);
+                // Update the hidden input field after deletion
+                updateBookListInput();
+            }
+        });
+        updateBookListInput();
+
+    const isbnInput = document.querySelector('.book-isbn');
+
+    // Add an event listener for input changes
+    isbnInput.addEventListener('input', function () {
+        // Remove any non-numeric characters (e.g., hyphens)
+        const cleanedInput = this.value.replace(/[^0-9]/g, '');
+        this.value = cleanedInput
+
+        // Format the ISBN-13 with hyphens after the first 3 characters
+        if (cleanedInput.length >= 3) {
+            const formattedISBN = cleanedInput.slice(0, 3) + '-' + cleanedInput.slice(3);
+            this.value = formattedISBN;
+        }
+    });
+
+    function onlyDigit(field) {
+            field.value = field.value.replace(/[^0-9]/g, '')
+        }
+    </script>
+    
+    
+    
+    
 
     <style>
         body {
@@ -112,15 +259,7 @@
             background-color: #0056b3;
         }
 
-        #bundleFields {
-            display: none;
-            margin-top: 20px;
-        }
 
-        #bundleFields h2 {
-            font-size: 20px;
-            color: #333;
-        }
 
         ul {
             list-style: none;
